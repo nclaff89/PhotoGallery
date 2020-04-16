@@ -8,7 +8,7 @@ import java.util.concurrent.Executor
 
 /** Chapter 24 challenge 2 **/
 private const val TAG = "GalleryItemDataSource"
-class GalleryItemDataSource() : PageKeyedDataSource<Int, GalleryItem>(){
+class GalleryItemDataSource : PageKeyedDataSource<Int, GalleryItem>(){
 
     val flickrFetcher = FlickrFetcher()
     val api = flickrFetcher.flickrApi
@@ -24,10 +24,14 @@ class GalleryItemDataSource() : PageKeyedDataSource<Int, GalleryItem>(){
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, GalleryItem>
     ) {
-        val currentPage = 1;
+        val currentPage = 1
         val nextPage = currentPage + 1
 
-        apiService.fetchPhotosSync(page = currentPage,
+        //testing only
+        val testingThing = params.requestedLoadSize
+        Log.d("params", "$testingThing")
+
+        apiService.fetchPhotosSync( page = currentPage, perPage = params.requestedLoadSize,
         onPrepared = {
             postInitialState(NetworkState.LOADING)
         },
@@ -46,6 +50,7 @@ class GalleryItemDataSource() : PageKeyedDataSource<Int, GalleryItem>(){
             Log.d("Error", "$it")
         })
 
+
     }
 
     override fun loadAfter(
@@ -54,8 +59,9 @@ class GalleryItemDataSource() : PageKeyedDataSource<Int, GalleryItem>(){
     ) {
        val currentPage = params.key
         val nextPage = currentPage + 1
+        Log.d("currentpage", "$currentPage")
 
-        apiService.fetchPhotosAsync(page = currentPage,
+        apiService.fetchPhotosAsync(page = currentPage, perPage = params.requestedLoadSize,
         onPrepared = {
             postAfterState(NetworkState.LOADING)
         },

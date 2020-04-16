@@ -14,6 +14,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_photo_gallery.*
 
 
 private const val TAG = "PhotoGalleryFragment"
@@ -22,12 +23,14 @@ class PhotoGalleryFragment: Fragment() {
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
 
     private lateinit var photoRecyclerView: RecyclerView
+    //private lateinit var  swipeRefreshLayout: SwipeRefreshLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
 
         photoGalleryViewModel = ViewModelProviders.of(this).get(PhotoGalleryViewModel::class.java)
+
 
 
     }
@@ -48,15 +51,29 @@ class PhotoGalleryFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+//        swipeRefreshLayout.setOnRefreshListener {
+//            photoGalleryViewModel.refresh()
+//        }
+        initSwipeToRefresh()
         photoGalleryViewModel.galleryItemList.observe(
             viewLifecycleOwner, Observer {
                 Log.d("thelist", "$it")
+                Log.d("thelistSize", "${it.size}")
                     photoRecyclerView.adapter = PhotoAdapter(it)
+                swiperefresh.isRefreshing = false
 
 
             }
         )
 
+
+    }
+
+    private fun initSwipeToRefresh() {
+        swiperefresh.setOnRefreshListener {
+            photoGalleryViewModel.refresh()
+        }
     }
 
     private class PhotoHolder(itemTextView: TextView)
@@ -66,7 +83,7 @@ class PhotoGalleryFragment: Fragment() {
     }
 
     /** Chapter 24 challenge 2, implement PagedListAdapter **/
-    private class PhotoAdapter(private val galleryItems: List<GalleryItem>)
+    private class PhotoAdapter(private val galleryItems: PagedList<GalleryItem>)
         : PagedListAdapter<GalleryItem,PhotoHolder>(object : DiffUtil.ItemCallback<GalleryItem>(){
 
         override fun areItemsTheSame(oldItem: GalleryItem, newItem: GalleryItem): Boolean =

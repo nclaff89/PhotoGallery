@@ -15,6 +15,6 @@ interface FlickrApi{
     "&format=json" +
     "&nojsoncallback=1" +
     "&extras=url_s")
-    fun fetchPhotos(@Query("page")pageNum: Int): Call<FlickrResponse>
+    fun fetchPhotos(@Query("per_page")perPage: Int, @Query("page")pageNum: Int): Call<FlickrResponse>
     //fun fetchPhotos(): Call<FlickrResponse>
 }

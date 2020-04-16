@@ -28,6 +28,9 @@ class FlickrFetcher() {
     }
 
     /** Chapter 24 challenge 2 **/
+    /** comment this out and see the new classes added APiHelper,
+     * ApiService, NetworkState.kt, GalleryItemDataSource, GalleryItemDataSourceFactory
+     */
 //    fun fetchPhotos(){
 //        //val responseLiveData: MutableLiveData<List<GalleryItem>> = MutableLiveData()
 //        val flickrRequest: Call<FlickrResponse> = flickrApi.fetchPhotos()

@@ -11,7 +11,7 @@ class GalleryItemDataSourceFactory(
 
 
 
-    private val sourceLiveData = MutableLiveData<GalleryItemDataSource>()
+     val sourceLiveData = MutableLiveData<GalleryItemDataSource>()
     override fun create(): DataSource<Int, GalleryItem> {
         val latestSource = GalleryItemDataSource()
         Log.d("LatestSource", "$latestSource")
