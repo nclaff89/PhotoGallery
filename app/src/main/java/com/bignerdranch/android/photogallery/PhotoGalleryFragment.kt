@@ -1,10 +1,13 @@
 package com.bignerdranch.android.photogallery
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.GridLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -26,6 +29,9 @@ class PhotoGalleryFragment: Fragment() {
 
     private lateinit var photoRecyclerView: RecyclerView
 
+    /** Chapter 24 challenge 3 */
+    private lateinit var gridManager: GridLayoutManager
+
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
 
@@ -42,18 +48,40 @@ class PhotoGalleryFragment: Fragment() {
         val view = inflater.inflate(R.layout.fragment_photo_gallery, container, false)
 
         photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
-        photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
+        /** chapter 24 challenge 3 */
+        gridManager = GridLayoutManager(context, 3)
+        photoRecyclerView.layoutManager = gridManager
+
+
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /** chapter 24 challenge 3 **/
+        photoRecyclerView.viewTreeObserver.addOnGlobalLayoutListener {
+                var numberOfColumns = 1
+                val viewWidth = photoRecyclerView.measuredWidth
+                val singleElementWidth = 240
+                if(viewWidth > singleElementWidth){
+                    numberOfColumns = viewWidth / singleElementWidth
+                }
+                gridManager.spanCount = numberOfColumns
+                photoRecyclerView.layoutManager = gridManager
+                Log.d("Col", "$numberOfColumns")
+
+        }
+
+
         photoGalleryViewModel.galleryItemLiveData.observe(
             viewLifecycleOwner, Observer { galleryItems ->
                 photoRecyclerView.adapter = PhotoAdapter(galleryItems)
             }
         )
+
+
     }
 
     private class PhotoHolder(itemTextView: TextView)
@@ -67,6 +95,7 @@ class PhotoGalleryFragment: Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
             val textView = TextView(parent.context)
+            //val textView = TextView(parent.context, R.id.textView)
             return PhotoHolder(textView)
         }
 
