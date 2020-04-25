@@ -71,6 +71,7 @@ class PhotoGalleryFragment: Fragment() {
         photoRecyclerView.layoutManager = GridLayoutManager(context, 3)
 
         return view
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
