@@ -5,25 +5,17 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bignerdranch.android.photogallery.api.FlickrApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+
 
 private const val TAG = "PhotoGalleryFragment"
 class PhotoGalleryFragment: Fragment() {
@@ -47,7 +39,13 @@ class PhotoGalleryFragment: Fragment() {
                 val drawable = BitmapDrawable(resources, bitmap)
                 photoHolder.bindDrawable(drawable)
             }
-        lifecycle.addObserver(thumbnailDownloader.fragmentLifeCycleObserver)
+            lifecycle.addObserver(thumbnailDownloader.fragmentLifeCycleObserver)
+
+
+
+
+
+
 
     }
 
@@ -57,9 +55,16 @@ class PhotoGalleryFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewLifecycleOwner.lifecycle.addObserver(
-            thumbnailDownloader.viewLifecycleObserver
-        )
+
+        /** Chapter 25 challenge 1 **/
+        viewLifecycleOwnerLiveData.observe(viewLifecycleOwner, Observer {
+            it.lifecycle.addObserver(thumbnailDownloader.viewLifecycleObserver)
+        })
+//        viewLifecycleOwner.lifecycle.addObserver(
+//            thumbnailDownloader.viewLifecycleObserver
+//        )
+
+
         val view = inflater.inflate(R.layout.fragment_photo_gallery, container, false)
 
         photoRecyclerView = view.findViewById(R.id.photo_recycler_view)
